@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class VartSpel extends GameModel{
 	public enum Directions{
-		// hmm, vet inte riktigt vad detta är eller hur den används.. :( Den fanns i GoldModel.java
+		// hmm, vet inte riktigt vad detta är eller hur den används.. :( Den fanns i GoldModel.java (ska kolla videon)
 		
 	}
 	

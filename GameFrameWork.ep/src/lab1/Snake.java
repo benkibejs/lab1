@@ -58,7 +58,7 @@ public class Snake extends GameModel{
 	private Position applePos;
 	
 	/** The position of the body. */
-	private final List<Position> bodyPos = new ArrayList<Position>();;
+	private final List<Position> bodyPos = new ArrayList<Position>();
 	
 	/** The direction of the head with initial value. */
 	private Directions direction = Directions.NORTH;	
@@ -67,7 +67,6 @@ public class Snake extends GameModel{
 	private int score;
 	
 	public Snake(){
-		// TODO En constuctor för Snake. 
 		Dimension size = getGameboardSize();
 
 		// Blank out the whole gameboard

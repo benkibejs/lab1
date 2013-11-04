@@ -8,14 +8,20 @@ import java.util.List;
 
 import lab1.GoldModel.Directions;
 /** 
- * Ett spel fÃ¶r att testa lite idÃ©er som fÃ¶rhoppningsvis
- * blir ett fint spel att senare lÃ¤mna in.
+ * A game to test some different ideas and hopefully 
+ * turns in to a nice looking game to hand-in.
  * 
  */
 public class Snake extends GameModel{
 	public enum Directions{
-		// hmmm, vet inte riktigt vad detta Ã¤r eller hur den anvÃ¤nds.. :( Den fanns i GoldModel.java (ska kolla videon)
-		EAST(1, 0),
+		/* An enum with the four possible directions needed in the game  
+		 *  every direction needs two arguments (int x, int y).
+		 *  You need to look at it as a coordinate system with x and y meaning, 
+		 *  positive y is upwards and negative downwards
+		 *  positive x right and negative x is left.
+		 */
+		
+		EAST(1, 0), 
 		WEST(-1, 0),
 		NORTH(0, -1),
 		SOUTH(0, 1),
@@ -38,11 +44,16 @@ public class Snake extends GameModel{
 		}
 	}
 	
-	// TODO Definiera hur de olika spelobjekten ska se ut. GÃ¥r att gÃ¶ra finare!  
+	// TODO Define how the different game objects shall look like. Possible to do in a nicer way!  
 	/** Graphical representation of a coin. */
-	private static final GameTile APPLE_TILE = new RoundTile(Color.GREEN, Color.GREEN, 2.0);
+	
+	// FIXME Benjamin vad gör 2,0? Det funkade ju lika bra utan?
+	
+	private static final GameTile APPLE_TILE = new RoundTile( new Color(114,244,83)); //testar rgb
 	
 	/** Graphical representation of the collector */
+	
+	//FIXME Benjamin varör är det två färger?
 	private static final GameTile HEAD_TILE = new RoundTile(Color.BLACK, Color.RED, 2.0);
 	
 	/** Graphical representation of a part of the body*/
@@ -54,13 +65,16 @@ public class Snake extends GameModel{
 	/** The position of the collector. */
 	private Position headPos;
 	
-	/** The position of the collector. */
+	/** The position of the apple that the snake wants to eat (collect). */
 	private Position applePos;
 	
-	/** The position of the body. */
+	/** The position of the body of the snake. */
 	private final List<Position> bodyPos = new ArrayList<Position>();
 	
+	
+	
 	/** The direction of the head with initial value. */
+	//Sets the initial value to north, meaning that the snake moves upwards when the game begins.
 	private Directions direction = Directions.NORTH;	
 	
 	/** The number of coins found. */
@@ -70,6 +84,9 @@ public class Snake extends GameModel{
 		Dimension size = getGameboardSize();
 
 		// Blank out the whole gameboard
+		
+		//FIXME Benjamin är detta den första spelrutan som kommer upp? 
+		//FIXME Vad exakt är de som händer här?
 		for (int i = 0; i < size.width; i++) {
 			for (int j = 0; j < size.height; j++) {
 				setGameboardState(i, j, BLANK_TILE);
@@ -80,7 +97,7 @@ public class Snake extends GameModel{
 		this.headPos = new Position(size.width / 2, size.height / 2);
 		setGameboardState(this.headPos, HEAD_TILE);
 		// Insert a body
-		this.bodyPos.add(new Position(this.headPos.getX(), this.headPos.getY() - 1));
+		this.bodyPos.add(new Position(this.headPos.getX(), this.headPos.getY() - 1)); // Vad gör -1?
 		
 		// Insert coins into the gameboard.
 		addApple();
@@ -90,6 +107,9 @@ public class Snake extends GameModel{
 	 * Update the direction of the collector
 	 * according to the user's keypress.
 	 */
+	
+	// VK_direction Is pre-programed keyboardbuttons for the arrow keys in java. 
+	// Directions.direction it's our own programed directions.
 	private void updateDirection(final int key) {
 		switch (key) {
 			case KeyEvent.VK_LEFT:
@@ -105,7 +125,7 @@ public class Snake extends GameModel{
 				this.direction = Directions.SOUTH;
 				break;
 			default:
-				// Don't change direction if another key is pressed
+				// Won't change direction if another key is pressed
 				break;
 		}
 	}
@@ -154,18 +174,20 @@ public class Snake extends GameModel{
 		this.bodyPos.add(this.headPos);
 		
 		// Remove last body tile of the snake
+		//FIXME Varför?
 		setGameboardState(lastBodyPos, BLANK_TILE);
 		this.bodyPos.remove(0);
 		
 		// Change head position.
 		this.headPos = getNextHeadPos();
 		
-		// Check for game over criterias
+		// Check for game-over criterias.  
 		if (isOutOfBounds(this.headPos) || getGameboardState(this.headPos) == BODY_TILE) {
 			throw new GameOverException(this.bodyPos.size() - 1);
+			//FIXME Varför - 1 på den här ovan? Är detta för att man skall kunna returnera spelarens poäng?
 		}
 		
-		// Draw collector at new position.
+		// Draw head (collector) at new position.
 		setGameboardState(this.headPos, HEAD_TILE);
 		
 		if (this.applePos.getX() == this.headPos.getX() && this.applePos.getY() == this.headPos.getY()) {
@@ -174,6 +196,7 @@ public class Snake extends GameModel{
 		}
 	}
 	
+	//Checks that the snake hasen't crashed with walls.
 	private boolean isOutOfBounds(Position pos) {
 		return pos.getX() < 0 || pos.getX() >= getGameboardSize().width
 				|| pos.getY() < 0 || pos.getY() >= getGameboardSize().height;

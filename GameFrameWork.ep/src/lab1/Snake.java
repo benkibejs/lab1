@@ -171,7 +171,7 @@ public class Snake extends GameModel{
 		
 		if (this.applePos.getX() == this.headPos.getX() && this.applePos.getY() == this.headPos.getY()) {
 			addApple();
-			this.bodyPos.add(lastBodyPos);
+			this.bodyPos.add(0,lastBodyPos);
 		}
 	}
 	

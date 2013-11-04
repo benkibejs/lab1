@@ -14,7 +14,7 @@ import lab1.GoldModel.Directions;
  */
 public class Snake extends GameModel{
 	public enum Directions{
-		// hmm, vet inte riktigt vad detta är eller hur den används.. :( Den fanns i GoldModel.java (ska kolla videon)
+		// hmmm, vet inte riktigt vad detta är eller hur den används.. :( Den fanns i GoldModel.java (ska kolla videon)
 		EAST(1, 0),
 		WEST(-1, 0),
 		NORTH(0, -1),

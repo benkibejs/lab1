@@ -25,5 +25,6 @@ public class Main {
 		// Open the window
 		frame.setVisible(true);
 		frame.requestFocus();
+		frame.setResizable(false);
 	}
 }

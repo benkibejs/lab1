@@ -8,7 +8,7 @@ import java.util.List;
 
 import lab1.GoldModel.Directions;
 /** 
- * @author Group 77: Benjamin Lindberg and Rasti Tengman 
+ * @author Group 107: Benjamin Lindberg and Rasti Tengman 
  * 
  * <p><b>A simple snake game made by using the framework provided</b></p>
  *  

@@ -8,13 +8,14 @@ import java.util.List;
 
 import lab1.GoldModel.Directions;
 /** 
- * A game to test some different ideas and hopefully 
- * turns in to a nice looking game to hand-in.
+ * @author Group 77: Benjamin Lindberg and Rasti Tengman 
  * 
+ * <p><b>A simple snake game made by using the framework provided</b></p>
+ *  
  */
-public class Snake extends GameModel{
+public class SnakeModel extends GameModel{
 	
-	/* An enum with the four possible directions needed in the game  
+	/** An enum with the four possible directions needed in the game  
 	 *  every direction needs two arguments (int x, int y).
 	 *  You need to look at it as a coordinate system with x and y meaning, 
 	 *  positive y is upwards and negative downwards
@@ -46,13 +47,12 @@ public class Snake extends GameModel{
 			return this.yDelta;
 		}
 	}
-	
-	// TODO Define how the different game objects shall look like. Possible to do in a nicer way!  
-	/** Graphical representation of a coin. */
+	 
+	/** Graphical representation of an apple. */
 	
 	private static final GameTile APPLE_TILE = new RoundTile( new Color(54,124,43), new Color(114,244,83), 2.0); 
 	
-	/** Graphical representation of the collector */
+	/** Graphical representation of the head */
 	
 	
 	private static final GameTile HEAD_TILE = new RoundTile(Color.BLACK, Color.RED, 2.0);
@@ -63,10 +63,10 @@ public class Snake extends GameModel{
 	/** Graphical representation of a blank tile. */
 	private static final GameTile BLANK_TILE = new GameTile();
 			
-	/** The position of the collector. */
+	/** The position of the head. */
 	private Position headPos;
 	
-	/** The position of the apple that the snake wants to eat (collect). */
+	/** The position of the apple that the snake wants to eat. */
 	private Position applePos;
 	
 	/** The position of the body of the snake. */
@@ -81,7 +81,7 @@ public class Snake extends GameModel{
 	
 	
 	
-	public Snake(){
+	public SnakeModel(){
 		Dimension size = getGameboardSize();
 
 		// Blank out the whole gameboard
@@ -93,18 +93,18 @@ public class Snake extends GameModel{
 			}
 		}
 
-		// Insert the collector in the middle of the gameboard.
+		// Insert the head in the middle of the gameboard.
 		this.headPos = new Position(size.width / 2, size.height / 2);
 		setGameboardState(this.headPos, HEAD_TILE);
 		// Insert a body
 		this.bodyPos.add(new Position(this.headPos.getX(), this.headPos.getY() - 1));
 		
-		// Insert coins into the gameboard.
+		// Insert an apple into the gameboard.
 		addApple();
 	}
 	
 	/**
-	 * Update the direction of the collector
+	 * Update the direction of the snake
 	 * according to the user's keypress.
 	 */
 	
@@ -148,7 +148,7 @@ public class Snake extends GameModel{
 	}
 	
 	/**
-	 * Insert another coin into the gameboard.
+	 * Insert a new apple into the gameboard.
 	 */
 	
 	private void addApple() {
@@ -193,8 +193,7 @@ public class Snake extends GameModel{
 		this.bodyPos.add(this.headPos);
 		
 		// Remove last body tile of the snake
-		
-		setGameboardState(lastBodyPos, BLANK_TILE);
+		if (!getGameboardState(lastBodyPos).equals(APPLE_TILE)) setGameboardState(lastBodyPos, BLANK_TILE);
 		this.bodyPos.remove(0);
 		
 		// Change head position.
@@ -206,7 +205,7 @@ public class Snake extends GameModel{
 			
 		}
 		
-		// Draw head (collector) at new position.
+		// Draw head at new position.
 		setGameboardState(this.headPos, HEAD_TILE);
 		
 		if (this.applePos.getX() == this.headPos.getX() && this.applePos.getY() == this.headPos.getY()) {

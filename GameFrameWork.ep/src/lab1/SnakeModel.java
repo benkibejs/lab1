@@ -62,9 +62,6 @@ public class SnakeModel extends GameModel{
 	
 	/** Graphical representation of a blank tile. */
 	private static final GameTile BLANK_TILE = new GameTile();
-			
-	/** The position of the head. */
-	private Position headPos;
 	
 	/** The position of the apple that the snake wants to eat. */
 	private Position applePos;
@@ -94,10 +91,10 @@ public class SnakeModel extends GameModel{
 		}
 
 		// Insert the head in the middle of the gameboard.
-		this.headPos = new Position(size.width / 2, size.height / 2);
-		setGameboardState(this.headPos, HEAD_TILE);
+		this.bodyPos.add(new Position(size.width / 2, size.height / 2));
+		setGameboardState(this.bodyPos.get(0), HEAD_TILE);
 		// Insert a body
-		this.bodyPos.add(new Position(this.headPos.getX(), this.headPos.getY() - 1));
+		this.bodyPos.add(this.bodyPos.get(0));
 		
 		// Insert an apple into the gameboard.
 		addApple();
@@ -178,8 +175,8 @@ public class SnakeModel extends GameModel{
 	
 	private Position getNextHeadPos() {
 		return new Position(
-				this.headPos.getX() + this.direction.getXDelta(),
-				this.headPos.getY() + this.direction.getYDelta());
+				this.bodyPos.get(this.bodyPos.size() - 1).getX() + this.direction.getXDelta(),
+				this.bodyPos.get(this.bodyPos.size() - 1).getY() + this.direction.getYDelta());
 	}
 
 	 
@@ -189,32 +186,37 @@ public class SnakeModel extends GameModel{
 		Position lastBodyPos=this.bodyPos.get(0);
 		
 		// Add body at the head 
-		setGameboardState(this.headPos, BODY_TILE);
-		this.bodyPos.add(this.headPos);
+		setGameboardState(this.bodyPos.get(this.bodyPos.size() - 1), BODY_TILE);
 		
 		// Remove last body tile of the snake
 		if (!getGameboardState(lastBodyPos).equals(APPLE_TILE)) setGameboardState(lastBodyPos, BLANK_TILE);
 		this.bodyPos.remove(0);
 		
 		// Change head position.
-		this.headPos = getNextHeadPos();
+		this.bodyPos.add(getNextHeadPos());
 		
 		// Check for game over criterias.  
-		if (isOutOfBounds(this.headPos) || getGameboardState(this.headPos) == BODY_TILE) {
+		if (isOutOfBounds(this.bodyPos.get(this.bodyPos.size() - 1)) || getGameboardState(this.bodyPos.get(this.bodyPos.size() - 1)) == BODY_TILE) {
 			throw new GameOverException(this.bodyPos.size() - 1);
 			
 		}
 		
 		// Draw head at new position.
-		setGameboardState(this.headPos, HEAD_TILE);
+		setGameboardState(this.bodyPos.get(this.bodyPos.size() - 1), HEAD_TILE);
 		
-		if (this.applePos.getX() == this.headPos.getX() && this.applePos.getY() == this.headPos.getY()) {
+		if (getGameboardState(applePos) == HEAD_TILE) {
 			this.bodyPos.add(0,lastBodyPos);
 			addApple();
 		}
 	}
 	
-	//Checks that the snake hasen't crashed with walls.
+	/**
+	 * Return wether the specified position is out of bounds.
+	 * 
+	 * @param pos The position to test
+	 *  
+	 * @return True if position is out ouf bounds
+	 */
 	private boolean isOutOfBounds(Position pos) {
 		return pos.getX() < 0 || pos.getX() >= getGameboardSize().width
 				|| pos.getY() < 0 || pos.getY() >= getGameboardSize().height;

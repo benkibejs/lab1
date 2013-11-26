@@ -49,12 +49,9 @@ public class SnakeModel extends GameModel{
 	}
 	 
 	/** Graphical representation of an apple. */
-	
 	private static final GameTile APPLE_TILE = new RoundTile( new Color(54,124,43), new Color(114,244,83), 2.0); 
 	
 	/** Graphical representation of the head */
-	
-	
 	private static final GameTile HEAD_TILE = new RoundTile(Color.BLACK, Color.RED, 2.0);
 	
 	/** Graphical representation of a part of the body*/
@@ -72,7 +69,6 @@ public class SnakeModel extends GameModel{
 	
 	
 	/** The direction of the head with initial value. */
-	//Sets the initial value to north, meaning that the snake moves upwards when the game begins.
 	private Directions direction = Directions.NORTH;	
 	
 	

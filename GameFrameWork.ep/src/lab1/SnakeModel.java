@@ -66,14 +66,15 @@ public class SnakeModel extends GameModel{
 	/** The position of the body of the snake. */
 	private final List<Position> bodyPos = new ArrayList<Position>();
 	
-	
-	
 	/** The direction of the head with initial value. */
 	private Directions direction = Directions.NORTH;	
 	
 	
 	
 	
+	/**
+	 * The constructor of game.
+	 */
 	public SnakeModel(){
 		Dimension size = getGameboardSize();
 
@@ -99,10 +100,9 @@ public class SnakeModel extends GameModel{
 	/**
 	 * Update the direction of the snake
 	 * according to the user's keypress.
+	 * 
+	 * @param key The most recent keystroke.
 	 */
-	
-	// VK_direction Is pre-programed keyboardbuttons for the arrow keys in java. 
-	// Directions.direction it's our own programed directions.
 	private void updateDirection(final int key) {
 		switch (key) {
 			case KeyEvent.VK_LEFT:
@@ -143,7 +143,6 @@ public class SnakeModel extends GameModel{
 	/**
 	 * Insert a new apple into the gameboard.
 	 */
-	
 	private void addApple() {
 		Position newApplePos;
 		Dimension size = getGameboardSize();
@@ -169,13 +168,18 @@ public class SnakeModel extends GameModel{
 		return (getGameboardState(pos) == BLANK_TILE);
 	}
 	
+	/**
+	 * Calculates where the head should be after moving.
+	 * 
+	 * @return Position of the head after moving.
+	 */
 	private Position getNextHeadPos() {
 		return new Position(
 				this.bodyPos.get(this.bodyPos.size() - 1).getX() + this.direction.getXDelta(),
 				this.bodyPos.get(this.bodyPos.size() - 1).getY() + this.direction.getYDelta());
 	}
 
-	 
+	@Override 
 	public void gameUpdate(int lastKey) throws GameOverException {
 		updateDirection(lastKey);
 		
@@ -200,9 +204,17 @@ public class SnakeModel extends GameModel{
 		// Draw head at new position.
 		setGameboardState(this.bodyPos.get(this.bodyPos.size() - 1), HEAD_TILE);
 		
+		// Check if apple is found.
 		if (getGameboardState(applePos) == HEAD_TILE) {
-			this.bodyPos.add(0,lastBodyPos);
-			addApple();
+			
+			this.bodyPos.add(0,lastBodyPos); //Enligt kommentarer från rättare behövde vi här kolla om kroppsdelen blir out of bounds men då den alltid skapas där en tidigare kropp har varit är detta redundant.
+			
+			if(this.bodyPos.size() < getGameboardSize().getHeight()*getGameboardSize().getWidth()){
+				addApple();
+			} else {
+				throw new GameOverException(this.bodyPos.size() + 99);
+			}
+			
 		}
 	}
 	
@@ -211,7 +223,7 @@ public class SnakeModel extends GameModel{
 	 * 
 	 * @param pos The position to test
 	 *  
-	 * @return True if position is out ouf bounds
+	 * @return True if position is out ouf bounds	 
 	 */
 	private boolean isOutOfBounds(Position pos) {
 		return pos.getX() < 0 || pos.getX() >= getGameboardSize().width
